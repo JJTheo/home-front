@@ -1,0 +1,4 @@
+<label class="tf">errors: {{ text.errors | json }}</label>
+<label class="tf">touched: {{ text.touched }}</label>
+<label class="tf">value: {{ text.value }}</label>
+<input type="text" [formControl]="text" (blur)="blur()" />

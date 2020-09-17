@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+label {
+  display:block;
+}
+label.sc {
+  background-color: lightgray;
+}
+label.tf {
+  background-color: lightblue;
+}
+label.nf {
+  background-color: lightcoral;
+}
