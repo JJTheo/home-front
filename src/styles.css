@@ -5,7 +5,7 @@ label {
 label.sc {
   background-color: lightgray;
 }
-label.tf {
+hf-text-field, hf-text-field2 label {
   background-color: lightblue;
 }
 label.nf {

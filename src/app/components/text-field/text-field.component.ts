@@ -50,7 +50,7 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
   @Input() errorMessage: string = "";
   @Input() maskParam: any;
 
-  @Output() hfcv = new EventEmitter<any>();
+  @Output() onHfvc = new EventEmitter<any>();
 
   text: FormControl;
 
@@ -71,8 +71,9 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
     if (changes.mandatory || changes.errorMessage) {
       console.log("ngOnChanges updateValueAndValidity()");
 
+      // Update the validator and send modifications to top components
       this.text && this.text.updateValueAndValidity();
-      this.hfcv.emit();
+      this.onHfvc.emit();
       // this.text && this.cd.detectChanges();
       // this._onValidatorChange && this._onValidatorChange();
     }
@@ -92,6 +93,7 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
   blur() {
     console.log("text field blur");
     this._onTouched();
+    this.onHfvc.emit();
   }
 
   /* CONTROL VALUE ACCESSOR */
@@ -121,7 +123,7 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
 
   validate(control: AbstractControl): ValidationErrors {
     console.log("validate", this.text.errors);
-    return this.text.errors;
+    return control.errors;
   }
 
   registerOnValidatorChange(fn: any) {

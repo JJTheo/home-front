@@ -9,13 +9,14 @@ import { NumberFieldComponent } from "./components/number-field/number-field.com
 import { TextFieldComponent } from "./components/text-field/text-field.component";
 import { TextField2Component } from './components/text-field2/text-field2.component';
 import { NumberField2Component } from './components/number-field2/number-field2.component';
-import { NgxMaskModule } from 'ngx-mask/lib/ngx-mask.module';
-import { IConfig } from 'ngx-mask';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { TextField3Component } from './components/text-field3/text-field3.component';
+import { NumberField3Component } from './components/number-field3/number-field3.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
-  declarations: [AppComponent, ShowcaseComponent, NumberFieldComponent, TextFieldComponent, TextField2Component, NumberField2Component],
+  declarations: [AppComponent, ShowcaseComponent, NumberFieldComponent, TextFieldComponent, TextField2Component, NumberField2Component, TextField3Component, NumberField3Component],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, NgxMaskModule.forRoot()],
   providers: [],
   bootstrap: [AppComponent],

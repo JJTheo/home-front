@@ -1,49 +1,73 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { FormControl, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from "@angular/forms";
 
 @Component({
   selector: "app-showcase",
   templateUrl: "./showcase.component.html",
   styleUrls: ["./showcase.component.css"],
 })
-export class ShowcaseComponent implements OnInit , AfterViewInit{
+export class ShowcaseComponent implements OnInit, AfterViewInit {
   errorMessage: string = "";
   text: string;
   number: number;
   textFc: FormControl;
   numFc: FormControl;
 
-  constructor(private changeDetect: ChangeDetectorRef) {
+  formGroup: FormGroup;
+
+  constructor(private changeDetect: ChangeDetectorRef, private fb: FormBuilder) {
     this.textFc = new FormControl();
-    this.numFc = new FormControl('');
-    // setTimeout(() => {
-    //   console.log("disable");
-    //   this.numFc.disable();
-    //   this.numFc.setValue(null);
-    // }, 1000);
+    this.numFc = new FormControl("");
+
+    this.formGroup = this.fb.group({
+      number: [null, [Validators.required, Validators.min(3)]],
+      text: [null, Validators.required],
+    });
+    console.log(this.formGroup);
+    setTimeout(() => {
+      console.log("markAsTouched");
+      this.formGroup.controls.text.updateValueAndValidity();
+    }, 1000);
     // setTimeout(() => {
     //   console.log("enable");
     //   this.numFc.enable();
     // }, 2000);
   }
 
-  hfcv() {
+  getFormValidationErrors(form: FormGroup | FormArray): { [key: string]: any } | null {
+    let hasError = false;
+    const result = Object.keys(form.controls).reduce((acc, key) => {
+      const control = form.get(key);
+      const errors =
+        control instanceof FormGroup || control instanceof FormArray
+          ? this.getFormValidationErrors(control)
+          : control.errors;
+      if (errors) {
+        acc[key] = errors;
+        hasError = true;
+      }
+      return acc;
+    }, {} as { [key: string]: any });
+    return hasError ? result : null;
+  }
+
+  hfvc() {
     console.log("valchange");
-    this.changeDetect.detectChanges();
+    // this.changeDetect.detectChanges();
   }
 
   ngAfterViewInit(): void {
     console.log("ngAfterViewInit");
-      this.changeDetect.detectChanges();
+    // this.changeDetect.detectChanges();
     // this.numFc.statusChanges.subscribe((val: any) => {
     //   console.log("status changes", val);
     // });
     this.numFc.valueChanges.subscribe((val: any) => {
       console.log("value changes", val);
-    })
+    });
     // console.log("updateValueAndValidity");
     // this.numFc.updateValueAndValidity();
-    
+
     // this.changeDetect.detectChanges();
 
     // this.numFc.updateValueAndValidity();
@@ -66,6 +90,5 @@ export class ShowcaseComponent implements OnInit , AfterViewInit{
     this.errorMessage = "";
     // this.numFc.updateValueAndValidity();
     // this.changeDetect.detectChanges();
-
   }
 }

@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, EventEmitter, forwardRef, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from "@angular/core";
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -7,6 +7,7 @@ import {
   NG_VALUE_ACCESSOR,
   ValidationErrors,
   Validator,
+  Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -32,6 +33,10 @@ export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, DoChe
   @Input() placeholder: string = "";
   @Input() mandatory: boolean = false;
   @Input() errorMessage: string = "";
+  @Input() min: number;
+  @Input() max: number;
+
+  @Output() onHfvc = new EventEmitter<any>();
 
   number: FormControl;
 
@@ -56,7 +61,11 @@ export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, DoChe
 
   ngOnInit(): void {
     console.log("mandatory", this.mandatory);
-    this.number = new FormControl("");
+    if (this.min) {
+      this.number = new FormControl("", [Validators.min(this.min), Validators.max(this.max)]);
+    }else {
+      this.number = new FormControl("");
+    }
 
     this._changeSub = this.number.valueChanges.subscribe((value: any) => {
       console.log("changed", value);
@@ -65,9 +74,10 @@ export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, DoChe
   }
   ngDoCheck(): void {
     console.log("doCheck");
-    if (this.number.touched) {
-      this._onTouched();
-    }
+    // if (this.number.touched) {
+    //   this._onTouched();
+    //   this.onHfvc.emit();
+    // }
   }
 
   ngAfterViewChecked(): void {
@@ -80,6 +90,12 @@ export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, DoChe
 
   ngOnDestroy(): void {
     this._changeSub.unsubscribe();
+  }
+
+  hfvc() {
+    if (this.number.touched)
+      this._onTouched();
+    this.onHfvc.emit();
   }
 
   /* CONTROL VALUE ACCESSOR */

@@ -2,15 +2,38 @@
 <button (click)="resetErrMsg()" lablel="randomerrormsg" type="button">restErrorMsg</button>
 <br />
 
-<label class="sc">errors: {{ numFc.errors | json }}</label>
+<!-- <label class="sc">errors: {{ numFc.errors | json }}</label>
 <label class="sc">touched: {{ numFc.touched }}</label>
-<label class="sc">value: {{ numFc.value }}</label>
+<label class="sc">value: {{ numFc.value }}</label> -->
 
 <!-- <hf-text-field2 [parentFormControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field2> -->
 <!-- <hf-text-field [uuid]="'r'" [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field> -->
 <!-- <hf-text-field [formControl]="numFc"></hf-text-field> -->
 <!-- <hf-number-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-number-field> -->
-<hf-text-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (hfcv)="hfcv()"></hf-text-field>
+<!-- <hf-text-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (onHfvc)="hfvc()"></hf-text-field> -->
+<!-- <hf-number-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (onHfvc)="hfvc()"></hf-number-field> -->
+<div [formGroup]="formGroup">
+  <label class="sc">errors: {{ getFormValidationErrors(formGroup) | json }}</label>
+  <label class="sc">valid: {{ formGroup.valid }}</label>
+  <label class="sc">touched: {{ formGroup.touched }}</label>
+  <label class="sc">value: {{ formGroup.value | json }}</label>
+
+  <!-- 
+    Philosophie a poursuivre:
+    - Les hf-input sont juste un élément de style, avec label (pas error message -> le mettre dans les validator)
+    - Les Validator sont tous set dans le showcase et ils s'occupent de générer le message d'erreur
+    - Voir pour que les messages d'erreur soient defini qqpart. On les donne aux enfants ?
+   -->
+
+  <!-- <input [formControl]="formGroup.controls.text" />
+  <input [formControl]="formGroup.controls.number" /> -->
+
+  <hf-text-field3 label="text field 3bl" [formControl]="formGroup.controls.text"></hf-text-field3>
+  <hf-text-field3 label="text field 3bl" [formControl]="formGroup.controls.number"></hf-text-field3>
+
+  <!-- <hf-number-field3 label="number field 3" formControlName="number"></hf-number-field3> -->
+</div>
+
 <!-- <hf-number-field2 [fc]="numFc"></hf-number-field2> -->
 <!-- <hf-text-field [uuid]="'t'" [(ngModel)]="text" [mandatory]="true"></hf-text-field>
 <br/>

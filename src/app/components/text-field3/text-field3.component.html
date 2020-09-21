@@ -1,0 +1,10 @@
+<label class="hf-base-input-label">errors: {{ text.errors | json }}</label>
+<label class="hf-base-input-label">touched: {{ text.touched }}</label>
+<label class="hf-base-input-label">value: {{ text.value }}</label>
+
+<label class="hf-base-input-label" *ngIf="label">{{label}}</label>
+
+<input type="text" class="hf-base-input" [formControl]="text" [class.invalid]="text.invalid" (blur)="blur()" />
+
+<label class="hf-base-input-error">{{ text.errors || undefined | json}}</label>
+
