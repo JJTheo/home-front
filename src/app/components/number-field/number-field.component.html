@@ -1,9 +1,8 @@
-<label class="nf">errors: {{ number.errors | json }}</label>
+<label class="nf">errors: {{ getErrors()  }}</label>
 <label class="nf">touched: {{ number.touched }}</label>
 <label class="nf">value: {{ number.value }}</label>
 <hf-text-field
   [formControl]="number"
-  [uuid]="uuid"
   [label]="label"
   [placeholder]="placeholder"
   [mandatory]="mandatory"

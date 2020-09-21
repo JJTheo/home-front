@@ -1,0 +1,4 @@
+<label class="tf">errors: {{ number.errors | json }}</label>
+<label class="tf">touched: {{ number.touched }}</label>
+<label class="tf">value: {{ number.value }}</label>
+<hf-text-field2 [fc]="number" (hfBlur)="onBlur()"></hf-text-field2>

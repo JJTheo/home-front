@@ -1,15 +1,17 @@
-<button (click)="randomErrMsg()" lablel="randomerrormsg" type="button" >randomErrorMsg</button>
-<button (click)="resetErrMsg()" lablel="randomerrormsg" type="button" >restErrorMsg</button>
+<button (click)="randomErrMsg()" lablel="randomerrormsg" type="button">randomErrorMsg</button>
+<button (click)="resetErrMsg()" lablel="randomerrormsg" type="button">restErrorMsg</button>
 <br />
 
 <label class="sc">errors: {{ numFc.errors | json }}</label>
 <label class="sc">touched: {{ numFc.touched }}</label>
 <label class="sc">value: {{ numFc.value }}</label>
 
-<!-- <hf-text-field [uuid]="'r'" [formControl]="textFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field> -->
-<hf-number-field [uuid]="'r'" [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-number-field>
-<!-- <hf-number-field  [uuid]="'r'" [(ngModel)]="number" [mandatory]="true"></hf-number-field> -->
+<!-- <hf-text-field2 [parentFormControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field2> -->
+<!-- <hf-text-field [uuid]="'r'" [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field> -->
+<!-- <hf-text-field [formControl]="numFc"></hf-text-field> -->
+<!-- <hf-number-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-number-field> -->
+<hf-text-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (hfcv)="hfcv()"></hf-text-field>
+<!-- <hf-number-field2 [fc]="numFc"></hf-number-field2> -->
 <!-- <hf-text-field [uuid]="'t'" [(ngModel)]="text" [mandatory]="true"></hf-text-field>
 <br/>
 <hf-text-field [uuid]="'r'" [formControl]="textFc" [mandatory]="true"></hf-text-field> -->
-<p>showcase works! {{ text }}</p>

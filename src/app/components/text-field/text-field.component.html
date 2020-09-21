@@ -1,4 +1,28 @@
 <label class="tf">errors: {{ text.errors | json }}</label>
 <label class="tf">touched: {{ text.touched }}</label>
 <label class="tf">value: {{ text.value }}</label>
-<input type="text" [formControl]="text" (blur)="blur()" />
+<!-- <input type="text" [formControl]="text" (blur)="blur()" /> -->
+
+
+<!-- WITHOUT MASK  -->
+<input #inputElement *ngIf="!maskParam"
+type="text"
+[formControl]="text"
+(blur)="blur()"
+[placeholder]="placeholder"
+[class.invalid]="text.errors" />
+
+<!-- WITH MASK  -->
+<input *ngIf="maskParam"
+type="text"
+[formControl]="text"
+(blur)="blur()"
+[placeholder]="placeholder"
+[class.invalid]="formControl.errors"
+mask="{{maskParam.mask}}"
+placeHolderCharacter="{{maskParam.placeHolderCharacter}}"
+[specialCharacters]="maskParam.specialCharacters"
+[showMaskTyped]="maskParam.showMaskTyped"
+[dropSpecialCharacters]="maskParam.dropSpecialCharacters"
+prefix="{{maskParam.prefix}}" />
+

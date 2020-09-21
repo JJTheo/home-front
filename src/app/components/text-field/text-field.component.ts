@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, forwardRef, OnDestroy, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, forwardRef, OnDestroy, OnChanges, SimpleChanges, ChangeDetectionStrategy, AfterContentChecked, AfterViewChecked, AfterContentInit, Output, ChangeDetectorRef } from "@angular/core";
 import {
   ControlValueAccessor,
   FormControl,
@@ -41,14 +41,16 @@ import { Subscription } from "rxjs";
       useExisting: forwardRef(() => TextFieldComponent),
       multi: true,
     },
-  ],
+  ]
 })
-export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, ControlValueAccessor, Validator {
-  @Input() uuid: string;
+export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, ControlValueAccessor, Validator, AfterContentInit {
   @Input() label: string = "";
   @Input() placeholder: string = "";
   @Input() mandatory: boolean = false;
   @Input() errorMessage: string = "";
+  @Input() maskParam: any;
+
+  @Output() hfcv = new EventEmitter<any>();
 
   text: FormControl;
 
@@ -57,26 +59,30 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
   private _changeSub: Subscription;
   private initialized: boolean = false;
 
-  /*
-  https://stackoverflow.com/questions/57186593/how-to-pass-ngcontrol-status-to-child-component-in-angular-implementing-control
-  A tester, enlever le expressionhaschangedafteritwaschecked. On devrait pouvoir conserver les validator définis en haut et en rajouter un avec le number.
+  constructor(private cd: ChangeDetectorRef) { }
 
-  */
-
-  constructor() {}
+  ngAfterContentInit(): void {
+    console.log("After content init");
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this._consoleLog("ngOnChanges", changes);
+    console.log("ngOnChanges", changes);
     // if (!this.initialized) return;
     if (changes.mandatory || changes.errorMessage) {
+      console.log("ngOnChanges updateValueAndValidity()");
+
       this.text && this.text.updateValueAndValidity();
+      this.hfcv.emit();
+      // this.text && this.cd.detectChanges();
       // this._onValidatorChange && this._onValidatorChange();
     }
   }
 
   ngOnInit(): void {
+    console.log("ngoninit");
     this.text = new FormControl(undefined, this._customValidator.bind(this));
-    this.initialized = true;
+    // this.hfValidatorChange.emit();
+
   }
 
   ngOnDestroy(): void {
@@ -91,54 +97,52 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
   /* CONTROL VALUE ACCESSOR */
 
   writeValue(val: any) {
-    this._consoleLog("writeValue", val);
+    console.log("writeValue", val);
     this.text.setValue(val, { emitEvent: false });
   }
 
   registerOnChange(fn: any) {
-    this._consoleLog("registerOnChange", fn);
     this._changeSub = this.text.valueChanges.subscribe((value: any) => {
-      this._consoleLog("onChange", value);
+      console.log("onChange", value);
       fn(value);
     });
   }
 
   registerOnTouched(fn: any) {
-    this._consoleLog("registerOnTouched", fn);
     this._onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean) {
-    this._consoleLog("setDisabledState", isDisabled);
+    console.log("setDisabledState", isDisabled);
     isDisabled ? this.text.disable() : this.text.enable();
   }
 
   /* VALIDATOR */
 
   validate(control: AbstractControl): ValidationErrors {
-    this._consoleLog("validate", this.text.errors);
+    console.log("validate", this.text.errors);
     return this.text.errors;
   }
 
-  registerOnValidatorChange(fn : any) {
-    this._onValidatorChange = ()=> {
-      this._consoleLog("onValidatorChange");
+  registerOnValidatorChange(fn: any) {
+    console.log("registerOnValidatorChange");
+    this._onValidatorChange = () => {
+      console.log("onValidatorChange");
       fn();
     };
   }
 
   private _customValidator(control: AbstractControl): ValidationErrors {
+    console.log(control && control.errors);
+    console.log(this.text && this.text.errors);
     let error: ValidationErrors = {};
 
     if (this.mandatory && !control.value) error.mandatory = true;
     if (this.errorMessage) error.custom = true;
+    console.log("error", error);
 
-    return error;
-  }
 
-  private _consoleLog(text: string, a?: any, b: any = " ", c: any = " ") {
-    if (this.uuid) {
-      console.log(this.uuid + ": " + text, a, b, c);
-    }
+
+    return error.mandatory || error.custom ? error : null;
   }
 }

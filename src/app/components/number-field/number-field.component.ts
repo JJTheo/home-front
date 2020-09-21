@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
 import {
   AbstractControl,
   ControlValueAccessor,
@@ -25,10 +25,9 @@ import { Subscription } from "rxjs";
       useExisting: forwardRef(() => NumberFieldComponent),
       multi: true,
     },
-  ],
+  ]
 })
-export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, ControlValueAccessor, Validator, AfterViewChecked {
-  @Input() uuid: string;
+export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, DoCheck, ControlValueAccessor, Validator, AfterContentChecked, AfterViewChecked, AfterViewInit {
   @Input() label: string = "";
   @Input() placeholder: string = "";
   @Input() mandatory: boolean = false;
@@ -41,74 +40,86 @@ export class NumberFieldComponent implements OnChanges, OnInit, OnDestroy, Contr
   private _onValidatorChange: () => void;
   private _changeSub: Subscription;
 
-  constructor(private changeDetect: ChangeDetectorRef) {}
-
-  ngAfterViewChecked(): void {
+  constructor(private changeDetect: ChangeDetectorRef) { }
+  
+  
+  ngAfterViewInit(): void {
+    // this.number.updateValueAndValidity();
+    // this._onValidatorChange();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.consoleLog("ngOnChanges", changes);
-    this.number && this.number.updateValueAndValidity();
+    console.log("ngOnChanges", changes);
+    // this.number && this.number.updateValueAndValidity();
+    this._onValidatorChange && this._onValidatorChange();
   }
 
   ngOnInit(): void {
-    this.consoleLog("mandatory", this.mandatory);
+    console.log("mandatory", this.mandatory);
     this.number = new FormControl("");
 
     this._changeSub = this.number.valueChanges.subscribe((value: any) => {
-      this.consoleLog("changed", value);
+      console.log("changed", value);
       this._onChange(+value);
     });
+  }
+  ngDoCheck(): void {
+    console.log("doCheck");
+    if (this.number.touched) {
+      this._onTouched();
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    console.log("ngAfterViewChecked");
+  }
+  ngAfterContentChecked(): void {
+    console.log("ngAfterContentChecked");
+    // this._onValidatorChange();
   }
 
   ngOnDestroy(): void {
     this._changeSub.unsubscribe();
   }
 
-  blur() {
-    console.log("number blue");
-    this._onTouched();
-  }
-
   /* CONTROL VALUE ACCESSOR */
 
   writeValue(val: any) {
-    this.consoleLog("writeValue", val);
+    console.log("writeValue", val);
 
     // val == 4 && this.number.setValue(val, { emitEvent: false });
     this.number.setValue(val, { emitEvent: false });
   }
   registerOnChange(fn: any) {
-    this.consoleLog("registerOnChange", fn);
+    console.log("registerOnChange");
     this._onChange = fn;
   }
   registerOnTouched(fn: any) {
-    this.consoleLog("registerOnTouched", fn);
+    console.log("registerOnTouched");
     this._onTouched = fn;
   }
   setDisabledState(isDisabled: boolean) {
-    this.consoleLog("setDisabledState", isDisabled);
+    console.log("setDisabledState", isDisabled);
     isDisabled ? this.number.disable() : this.number.enable();
+  }
+
+  getErrors() {
+    return JSON.stringify(this.number.errors);
   }
 
   /* VALIDATOR */
 
   validate(control: AbstractControl): ValidationErrors {
-    this.consoleLog("validate", this.number.errors);
-    
+    console.log("validate", this.number.errors);
+    console.log("validate", control.errors);
+
     return this.number.errors;
   }
-  
-  registerOnValidatorChange(fn : any) {
-    this._onValidatorChange = ()=> {
-      this.consoleLog("onValidatorChange");
+
+  registerOnValidatorChange(fn: any) {
+    this._onValidatorChange = () => {
+      console.log("onValidatorChange");
       fn();
     };
-  }
-
-  consoleLog(text: string, a?: any, b: any = " ", c: any = " ") {
-    if (this.uuid) {
-      console.log(this.uuid + ": " + text, a, b, c);
-    }
   }
 }
