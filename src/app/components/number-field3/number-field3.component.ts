@@ -1,5 +1,8 @@
-import { Component, forwardRef, Input, OnInit } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Component, forwardRef, Injector, Input, OnInit } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CVAConnector } from 'src/app/c-v-a-connector';
+import { NumberPipe } from 'src/app/pipes/number.pipe';
+import { ErrorMessageService } from 'src/app/services/error-message.service';
 
 @Component({
   selector: "hf-number-field3",
@@ -13,43 +16,44 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/f
     },
   ],
 })
-export class NumberField3Component implements OnInit, ControlValueAccessor {
+export class NumberField3Component extends CVAConnector implements OnInit {
   @Input() label: string = "";
+  @Input() readonly: boolean = false;
+  @Input() hideErrorMessage: boolean = false;
 
-  number: FormControl;
+  internalValue: string;
+  disabled: boolean = false;
 
-  _onTouched = () => {};
+  private numberPipe : NumberPipe;
 
-  constructor() {
-    this.number = new FormControl("");
+  constructor(injector: Injector, errorService: ErrorMessageService) {
+    super(injector, errorService);
+    this.numberPipe = new NumberPipe();
   }
 
-  ngOnInit(): void {}
-
-  blur() {
-    this._onTouched();
+  getErrorMsg(errors: any) {
+    console.log("getErrorMsg", errors);
   }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+    console.log("ngOnInit");
+  }
+
+  inputChange(val: any) {
+    console.log("input change", val);
+    let number = this.numberPipe.transform(val);
+    console.log("transformed num", number);
+    this._onChange(number);
+  }
+
   writeValue(val: any): void {
-    console.log("writeValue");
-    this.number && this.number.setValue(val, { emitEvent: false });
+    console.log("writeValue", val);
+    this.internalValue = val as string;
   }
-  registerOnChange(fn: any): void {
-    console.log("registerOnChange");
-    this.number.valueChanges.subscribe((value: any) => {
-      console.log("onChange", value);
-      fn(value);
-    });
-  }
-  registerOnTouched(fn: any): void {
-    this._onTouched = fn;
-  }
-  setDisabledState?(isDisabled: boolean): void {
+
+  setDisabledState(isDisabled: boolean): void {
     console.log("setDisabledState");
+    this.disabled = isDisabled;
   }
-
-  /*
-  On a besoin d'avoir les validateurs MIN & MAX (définis hors du comp)
-  Convertisseur de valeur en nombre, 
-
-  */
 }

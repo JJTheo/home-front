@@ -1,0 +1,33 @@
+<label class="hf-base-input-label" *ngIf="label">Latitude</label>
+
+<input type="text"
+       class="hf-base-input"
+       [class.invalid]="control && control.invalid"
+       [disabled]="disabled"
+       [ngModel]="internalLatValue"
+       (ngModelChange)="latChange($event)"
+       (blur)="blur()"
+       mask="{{internalLatMask.mask}}"
+       placeHolderCharacter="{{internalLatMask.placeHolderCharacter}}"
+       [specialCharacters]="internalLatMask.specialCharacters"
+       [showMaskTyped]="internalLatMask.showMaskTyped"
+       [dropSpecialCharacters]="internalLatMask.dropSpecialCharacters"
+       prefix="{{internalLatMask.prefix}}" />
+
+<label class="hf-base-input-label" *ngIf="label">Longitude</label>
+
+<input type="text"
+       class="hf-base-input"
+       [class.invalid]="control && control.invalid"
+       [disabled]="disabled"
+       [ngModel]="internalLonValue"
+       (ngModelChange)="lonChange($event)"
+       (blur)="blur()"
+       mask="{{internalLonMask.mask}}"
+       placeHolderCharacter="{{internalLonMask.placeHolderCharacter}}"
+       [specialCharacters]="internalLonMask.specialCharacters"
+       [showMaskTyped]="internalLonMask.showMaskTyped"
+       [dropSpecialCharacters]="internalLonMask.dropSpecialCharacters"
+       prefix="{{internalLonMask.prefix}}" />
+
+<label class="hf-base-input-error" *ngIf="!hideErrorMessage">{{ getErrorMessage() }}</label>

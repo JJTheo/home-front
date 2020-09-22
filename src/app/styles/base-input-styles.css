@@ -1,20 +1,21 @@
 .hf-base-input-label {
   background-color: lightsteelblue;
   min-height: 1em;
-  width:240px;
-
+  width: 240px;
+  display: block;
 }
+
 .hf-base-input {
   border-radius: 4px;
-  width:240px;
-
+  width: 240px;
 }
+
 .hf-base-input.invalid {
   border-color: crimson;
-
 }
+
 .hf-base-input-error {
-  width:240px;
+  width: 240px;
   background-color: lightsteelblue;
   color: crimson;
   min-height: 1em;

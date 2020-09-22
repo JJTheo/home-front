@@ -9,29 +9,33 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Valid
 export class ShowcaseComponent implements OnInit, AfterViewInit {
   errorMessage: string = "";
   text: string;
-  number: number;
+  number: number = 42;
   textFc: FormControl;
   numFc: FormControl;
 
   formGroup: FormGroup;
 
   constructor(private changeDetect: ChangeDetectorRef, private fb: FormBuilder) {
-    this.textFc = new FormControl();
+    this.textFc = new FormControl("", Validators.compose([Validators.required, Validators.min(3), Validators.minLength(2)]));
     this.numFc = new FormControl("");
 
+    let geo = { lat: 43, lon: 6 };
     this.formGroup = this.fb.group({
-      number: [null, [Validators.required, Validators.min(3)]],
+      number: [2.321321, [Validators.required, Validators.min(3), Validators.max(10)]],
       text: [null, Validators.required],
+      geo: [geo, Validators.required]
     });
     console.log(this.formGroup);
     setTimeout(() => {
-      console.log("markAsTouched");
-      this.formGroup.controls.text.updateValueAndValidity();
+      // console.log("markAsTouched");
+      // this.formGroup.controls.text.updateValueAndValidity();
+      // this.textFc.disable();
     }, 1000);
-    // setTimeout(() => {
-    //   console.log("enable");
-    //   this.numFc.enable();
-    // }, 2000);
+    setTimeout(() => {
+      // console.log("enable");
+      // this.numFc.enable();
+      // this.textFc.enable();
+    }, 2000);
   }
 
   getFormValidationErrors(form: FormGroup | FormArray): { [key: string]: any } | null {

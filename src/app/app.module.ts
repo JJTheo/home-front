@@ -12,11 +12,13 @@ import { NumberField2Component } from './components/number-field2/number-field2.
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { TextField3Component } from './components/text-field3/text-field3.component';
 import { NumberField3Component } from './components/number-field3/number-field3.component';
+import { NumberPipe } from './pipes/number.pipe';
+import { GeoCoordinateComponent } from './components/geo-coordinate/geo-coordinate.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
 
 @NgModule({
-  declarations: [AppComponent, ShowcaseComponent, NumberFieldComponent, TextFieldComponent, TextField2Component, NumberField2Component, TextField3Component, NumberField3Component],
+  declarations: [AppComponent, ShowcaseComponent, NumberFieldComponent, TextFieldComponent, TextField2Component, NumberField2Component, TextField3Component, NumberField3Component, NumberPipe, GeoCoordinateComponent],
   imports: [BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule, NgxMaskModule.forRoot()],
   providers: [],
   bootstrap: [AppComponent],

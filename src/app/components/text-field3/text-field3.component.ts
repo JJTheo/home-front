@@ -1,14 +1,7 @@
-import { Component, DoCheck, forwardRef, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
-import {
-  AbstractControl,
-  ControlValueAccessor,
-  FormControl,
-  NgControl,
-  NG_VALUE_ACCESSOR,
-  ValidationErrors,
-  Validator,
-  Validators,
-} from "@angular/forms";
+import { Component, forwardRef, Injector, Input, OnInit } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { CVAConnector } from 'src/app/c-v-a-connector';
+import { ErrorMessageService } from 'src/app/services/error-message.service';
 
 @Component({
   selector: "hf-text-field3",
@@ -22,63 +15,39 @@ import {
     },
   ],
 })
-export class TextField3Component implements OnInit, OnChanges, DoCheck, ControlValueAccessor {
+export class TextField3Component extends CVAConnector implements OnInit {
   @Input() label: string = "";
-  @Input() errorMessage: string;
-  
-  @Input() formControl: FormControl;
+  @Input() readonly: boolean = false;
+  @Input() hideErrorMessage: boolean = false;
 
-  valid: boolean;
-  text: FormControl;
+  internalValue: string;
+  disabled: boolean = false;
 
-  _onTouched = () => {};
-
-  constructor() {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log("onChanges", changes);
+  constructor(injector: Injector, errorService: ErrorMessageService) {
+    super(injector, errorService);
   }
 
-  ngDoCheck(): void {
-    this.formControl.touched && this.text.markAsTouched();
+  getErrorMsg(errors: any) {
+    console.log("getErrorMsg", errors);
   }
 
   ngOnInit(): void {
-    this.text = new FormControl(this.formControl.value, this.formControl.validator);
-    this.formControl.statusChanges.subscribe((status: any) => {
-      console.log("status changes", status);
-    });
+    super.ngOnInit();
+    console.log("ngOnInit");
   }
 
-  blur() {
-    this._onTouched();
+  inputChange(val: any) {
+    console.log("input change", val);
+    this._onChange(val);
   }
 
   writeValue(val: any): void {
-    console.log("writeValue");
-    this.text.setValue(val, { emitEvent: false });
-  }
-  registerOnChange(fn: any): void {
-    console.log("registerOnChange");
-    this.text.valueChanges.subscribe((value: any) => {
-      console.log("onChange", value);
-      fn(value);
-    });
-  }
-  registerOnTouched(fn: any): void {
-    this._onTouched = () => {
-      console.log("touched");
-      fn();
-    };
-  }
-  setDisabledState?(isDisabled: boolean): void {
-    console.log("setDisabledState");
+    console.log("writeValue", val);
+    this.internalValue = val;
   }
 
-  validate(control: AbstractControl): ValidationErrors {
-    console.log("validate");
-    console.log(control.validator);
-    return this.text.errors;
+  setDisabledState(isDisabled: boolean): void {
+    console.log("setDisabledState");
+    this.disabled = isDisabled;
   }
-  // registerOnValidatorChange?(fn: () => void): void {}
 }

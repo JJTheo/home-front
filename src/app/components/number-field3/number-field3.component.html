@@ -1,10 +1,11 @@
-<label class="hf-base-input-label">errors: {{ number.errors | json }}</label>
-<label class="hf-base-input-label">touched: {{ number.touched }}</label>
-<label class="hf-base-input-label">value: {{ number.value }}</label>
-
 <label class="hf-base-input-label" *ngIf="label">{{label}}</label>
-<!-- WITHOUT MASK  -->
-<input type="text" class="hf-base-input" [formControl]="number" (blur)="blur()" [class.invalid]="number.errors" />
 
-<label class="hf-base-input-error">{{ number.errors || undefined | json}}</label>
+<input type="text"
+       class="hf-base-input"
+       [class.invalid]="control && control.invalid"
+       [disabled]="disabled"
+       [ngModel]="internalValue"
+       (ngModelChange)="inputChange($event)"
+       (blur)="blur()" />
 
+<label class="hf-base-input-error" *ngIf="!hideErrorMessage">{{ getErrorMessage() }}</label>
