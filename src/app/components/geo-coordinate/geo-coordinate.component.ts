@@ -6,7 +6,7 @@ import { ErrorMessageService } from 'src/app/services/error-message.service';
 @Component({
   selector: 'hf-geo-coordinate',
   templateUrl: './geo-coordinate.component.html',
-  styleUrls: ['./geo-coordinate.component.css'],
+  styleUrls: ["../../styles/base-input-styles.css"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -21,7 +21,6 @@ export class GeoCoordinateComponent extends CVAConnector implements OnInit {
   @Input() hideErrorMessage: boolean = false;
   @Input() coordinateNotation: string;
 
-
   internalLatValue: string;
   internalLatMask: any;
   internalLonValue: string;
@@ -32,13 +31,13 @@ export class GeoCoordinateComponent extends CVAConnector implements OnInit {
     super(injector, errorService);
   }
 
-    ngOnInit(): void {
-      super.ngOnInit();
-      console.log("ngOnInit");
+  ngOnInit(): void {
+    super.ngOnInit();
+    console.log("ngOnInit");
 
-      this.internalLatMask = this.buildCoordinateMask(true);
-      this.internalLonMask = this.buildCoordinateMask(false);
-    }
+    this.internalLatMask = this.buildCoordinateMask(true);
+    this.internalLonMask = this.buildCoordinateMask(false);
+  }
 
   getErrorMsg(errors: any) {
     console.log("getErrorMsg", errors);
@@ -47,20 +46,21 @@ export class GeoCoordinateComponent extends CVAConnector implements OnInit {
   latChange(val: string) {
     console.log("lat change", val);
     if (val) {
-      let substr = val.substr(0,2);
+      let substr = val.substr(0, 2);
       console.log("lat change val", substr);
       if (substr || substr === "0") {
-        this._onChange({lat: +substr, lon: this.control.value.lon});
+        this._onChange({ lat: +substr, lon: this.control.value.lon });
       }
     }
   }
+
   lonChange(val: any) {
     console.log("lon change", val);
     if (val) {
-      let substr = val.substr(0,2);
+      let substr = val.substr(0, 2);
       console.log("lon change val", substr);
       if (substr || substr === "0") {
-        this._onChange({lat: this.control.value.lat, lon: +substr});
+        this._onChange({ lat: this.control.value.lat, lon: +substr });
       }
     }
   }
@@ -90,8 +90,17 @@ export class GeoCoordinateComponent extends CVAConnector implements OnInit {
   writeValue(val: { lat: number, lon: number }): void {
     console.log("writeValue", val);
 
-    this.internalLatValue
-    // this.internalValue = val;
+    // TODO Pipe transform lat to string
+    let pad = (num: number, size: number) => { var s = "00" + parseInt("" + num); return s.substr(s.length - size); }
+
+    if (val && val.lat) {
+      // TODO Pipe transform lat to string
+      this.internalLatValue = pad(val.lat, 2);
+    }
+    if (val && val.lon) {
+      // TODO Pipe transform lon to string
+      this.internalLonValue = pad(val.lon, 3);
+    }
   }
 
   setDisabledState(isDisabled: boolean): void {

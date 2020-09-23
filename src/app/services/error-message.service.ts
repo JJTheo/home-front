@@ -9,11 +9,12 @@ export class ErrorMessageService {
 
   constructor() {
     this.unknownErrorsWarned = [];
-   }
+  }
 
   getErrorMessage(errors: ValidationErrors): string {
     if (!errors) return '';
 
+    // Add custom errors here
     if (errors.required) {
       return 'Mandatory';
     } else if (errors.min) {
@@ -28,10 +29,13 @@ export class ErrorMessageService {
 
   /* Display a warning when an unknown error is encountered. Only once */
   warnUnknownError(errors: ValidationErrors) {
-    let errorString = JSON.stringify(errors);
-    if (this.unknownErrorsWarned.indexOf(errorString)) {
-      this.unknownErrorsWarned.push(errorString);
-      console.warn(`The error ${errorString} is not recognized by Naval Front. 'Invalid' will be displayed for this error`);
+    let errorKeys: string[] = Object.keys(errors);
+    for (let i in errorKeys) {
+      let key = errorKeys[i]
+      if (this.unknownErrorsWarned.indexOf(key) < 0) {
+        this.unknownErrorsWarned.push(key);
+        console.warn(`The error ${key} is not recognized by Naval Front. 'Invalid' will be displayed for this error`);
+      }
     }
   }
 }

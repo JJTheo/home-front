@@ -10,7 +10,12 @@
   width: 240px;
 }
 
-.hf-base-input.invalid {
+.hf-base-input:read-only {
+  background-color: rgba(0, 0, 0, 0);
+  cursor: initial;
+}
+
+.hf-base-input.invalid.touched {
   border-color: crimson;
 }
 

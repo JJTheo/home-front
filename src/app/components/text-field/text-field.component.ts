@@ -135,7 +135,7 @@ export class TextFieldComponent implements OnChanges, OnInit, OnDestroy, Control
   }
 
   private _customValidator(control: AbstractControl): ValidationErrors {
-    console.log(control && control.errors);
+    console.log(control.errors);
     console.log(this.text && this.text.errors);
     let error: ValidationErrors = {};
 

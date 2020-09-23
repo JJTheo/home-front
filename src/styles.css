@@ -2,7 +2,7 @@
 label {
   display:block;
 }
-label.sc {
+label.sc, pre.sc {
   background-color: lightgray;
 }
 hf-text-field, hf-text-field2 label {

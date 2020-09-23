@@ -24,27 +24,22 @@ export class NumberField3Component extends CVAConnector implements OnInit {
   internalValue: string;
   disabled: boolean = false;
 
-  private numberPipe : NumberPipe;
+  private numberPipe: NumberPipe;
 
   constructor(injector: Injector, errorService: ErrorMessageService) {
     super(injector, errorService);
     this.numberPipe = new NumberPipe();
   }
 
-  getErrorMsg(errors: any) {
-    console.log("getErrorMsg", errors);
-  }
-
   ngOnInit(): void {
     super.ngOnInit();
-    console.log("ngOnInit");
   }
 
   inputChange(val: any) {
     console.log("input change", val);
     let number = this.numberPipe.transform(val);
-    console.log("transformed num", number);
     this._onChange(number);
+    this._onTouched();
   }
 
   writeValue(val: any): void {

@@ -1,5 +1,5 @@
 import { Component, forwardRef, Injector, Input, OnInit } from "@angular/core";
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { AbstractControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { CVAConnector } from 'src/app/c-v-a-connector';
 import { ErrorMessageService } from 'src/app/services/error-message.service';
 
@@ -27,22 +27,29 @@ export class TextField3Component extends CVAConnector implements OnInit {
     super(injector, errorService);
   }
 
-  getErrorMsg(errors: any) {
-    console.log("getErrorMsg", errors);
-  }
-
   ngOnInit(): void {
     super.ngOnInit();
-    console.log("ngOnInit");
+
+    let custom42Validator = (control: AbstractControl) => {
+      let val = control.value;
+      if (val == "42")
+        return { custom42: true };
+      return null;
+    };
+
+    // Test ajout validator interne ca marche, les erreurs remontent bien
+    // TODO Ca marche juste pas si a l'initialisation, la valeur est deja invalide (voir showcase ngAfterViewInit)
+    this.addValidator(custom42Validator);
   }
 
   inputChange(val: any) {
     console.log("input change", val);
     this._onChange(val);
+    this._onTouched();
   }
 
   writeValue(val: any): void {
-    console.log("writeValue", val);
+    console.log("writeValue " + this.label, val);
     this.internalValue = val;
   }
 

@@ -1,105 +1,25 @@
-<button (click)="randomErrMsg()" lablel="randomerrormsg" type="button">randomErrorMsg</button>
-<button (click)="resetErrMsg()" lablel="randomerrormsg" type="button">restErrorMsg</button>
-<br />
+<button (click)="toggleDisableEnable()">Disable/Enable</button>
+<button (click)="writeRandomValues()">Write random values</button>
 
-<!-- <label class="sc">errors: {{ numFc.errors | json }}</label>
-<label class="sc">touched: {{ numFc.touched }}</label>
-<label class="sc">value: {{ numFc.value }}</label> -->
-
-<!-- <hf-text-field2 [parentFormControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field2> -->
-<!-- <hf-text-field [uuid]="'r'" [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-text-field> -->
-<!-- <hf-text-field [formControl]="numFc"></hf-text-field> -->
-<!-- <hf-number-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage"></hf-number-field> -->
-<!-- <hf-text-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (onHfvc)="hfvc()"></hf-text-field> -->
-<!-- <hf-number-field [formControl]="numFc" [mandatory]="true" [errorMessage]="errorMessage" (onHfvc)="hfvc()"></hf-number-field> -->
 <div [formGroup]="formGroup">
-  <label class="sc">errors: {{ getFormValidationErrors(formGroup) | json }}</label>
+  <pre class="sc">errors: {{ getFormValidationErrors(formGroup) | json }}</pre>
   <label class="sc">valid: {{ formGroup.valid }}</label>
   <label class="sc">touched: {{ formGroup.touched }}</label>
   <label class="sc">value: {{ formGroup.value | json }}</label>
 
-  <!-- 
-    Philosophie a poursuivre:
-    - Les hf-input sont juste un élément de style, avec label (pas error message -> le mettre dans les validator)
-    - Les Hf-input s'occupent de parser la valeur 
-    - Les Validator sont tous set dans le showcase et ils s'occupent de générer le message d'erreur
-    - Voir pour que les messages d'erreur soient defini qqpart. On les donne aux enfants ?
-   -->
-
-
-  <!-- <input [formControl]="formGroup.controls.text" />
-  <input [formControl]="formGroup.controls.number" /> -->
-
-  <!-- <hf-text-field3 label="text field 3" [formControl]="formGroup.controls.text"></hf-text-field3>  -->
-  <!-- <hf-number-field3 label="number field 3" formControlName="number"></hf-number-field3> -->
-  <hf-geo-coordinate label="number field 3" formControlName="geo"></hf-geo-coordinate>
-
-  <!-- <hf-number-field3 label="number field 3" formControlName="number"></hf-number-field3> -->
+  <hf-number-field3 label="number field [3, 10]" formControlName="number"></hf-number-field3>
+  <br/>
+  <hf-text-field3 label="text field minLength 2" [formControl]="formGroup.controls.text"></hf-text-field3>
+  <br/>
+  <hf-geo-coordinate label="GeoCoordinate Required" formControlName="geo"></hf-geo-coordinate>
+  
+  <!-- Test lot of form controls -->
+  <!-- <hf-text-field3 label="text field multiple" *ngFor="let fcName of fcNames" [formControlName]="fcName"></hf-text-field3> -->
 </div>
 
-<!-- <hf-number-field3 label="text field 3"  [hideErrorMessage]="true" [formControl]="textFc"></hf-number-field3> -->
 
-<!-- {{number}}
-<hf-text-field3 label="text field 3bl" [(ngModel)]="number"></hf-text-field3>
-<hf-text-field3 label="text field 3bl"></hf-text-field3> -->
-
-<!-- <hf-number-field2 [fc]="numFc"></hf-number-field2> -->
-<!-- <hf-text-field [uuid]="'t'" [(ngModel)]="text" [mandatory]="true"></hf-text-field>
+<br/><br/><br/><br/><br/><br/><br/>
+<label class="sc">Fonctionnement en mode showcase, sans validation: {{ text }}</label>
+<hf-text-field3 label="Text Field avec ngModel" [(ngModel)]="text"></hf-text-field3>
 <br/>
-<hf-text-field [uuid]="'r'" [formControl]="textFc" [mandatory]="true"></hf-text-field> -->
-
-
-   <!-- 
-    Champs: number, text, geocoord
-    value {
-      num: 4,
-      txt: null,
-      geo: {
-        lat: 43.0
-        lon: null
-      }
-    }
-    errors: {
-      txt: true,
-      geo: true
-    }
-    -->
-
-<!-- 
-  value: {
-    number: null,
-    text: 1
-  }
-  Actual errors display
-  errors: { 
-    "number": { 
-      "required": true 
-    }, 
-    "text": { 
-      "min": { "min": 3, "actual": "1" },
-      "minlength": { 
-        "requiredLength": 2, 
-        "actualLength": 1 
-      } 
-    } 
-  }
-
-  Si on fait un ErrorMessageService {
-    getErrorMessage(errors: ValidationErrors) {
-      if (!errors) return;
-
-      if (errors.required) {
-        return 'Mandatory';
-      } else if (errors.min) {
-        return 'Minimum value exceeded';
-      } else if (errors.max) {
-        return 'Maximum value exceeded';
-      } else {
-        console.warn(`Error ${JSON.stringify(errors)} not recognized by naval front`);
-        return 'Invalid';
-      }
-    }
-  }
-  
-  et dans les composants 
--->
+<hf-text-field3 label="Sans ngModel & hideErrMsg" [hideErrorMessage]="true"></hf-text-field3>
