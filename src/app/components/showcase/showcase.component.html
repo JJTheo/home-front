@@ -6,20 +6,20 @@
   <label class="sc">valid: {{ formGroup.valid }}</label>
   <label class="sc">touched: {{ formGroup.touched }}</label>
   <label class="sc">value: {{ formGroup.value | json }}</label>
+  <br />
 
-  <hf-number-field3 label="number field [3, 10]" formControlName="number"></hf-number-field3>
-  <br/>
-  <hf-text-field3 label="text field minLength 2" [formControl]="formGroup.controls.text"></hf-text-field3>
-  <br/>
-  <hf-geo-coordinate label="GeoCoordinate Required" formControlName="geo"></hf-geo-coordinate>
-  
+  <hf-number-field3 label="NF [3, 10]" formControlName="number"></hf-number-field3>
+  <br />
+  <hf-text-field3 label="TF minLength 2" [formControl]="formGroup.controls.text"></hf-text-field3>
+  <br />
+  <hf-geo-coordinate label="GC Required" labelLat="Lat" labelLon="Lon" formControlName="geo"></hf-geo-coordinate>
+
   <!-- Test lot of form controls -->
   <!-- <hf-text-field3 label="text field multiple" *ngFor="let fcName of fcNames" [formControlName]="fcName"></hf-text-field3> -->
 </div>
 
-
-<br/><br/><br/><br/><br/><br/><br/>
+<br /><br /><br /><br /><br /><br /><br />
 <label class="sc">Fonctionnement en mode showcase, sans validation: {{ text }}</label>
-<hf-text-field3 label="Text Field avec ngModel" [(ngModel)]="text"></hf-text-field3>
-<br/>
-<hf-text-field3 label="Sans ngModel & hideErrMsg" [hideErrorMessage]="true"></hf-text-field3>
+<hf-text-field3 label="TF avec ngModel" [(ngModel)]="text"></hf-text-field3>
+<br />
+<hf-text-field3 label="TF sans ngModel / hideErrMsg" [hideErrorMessage]="true"></hf-text-field3>

@@ -1,8 +1,11 @@
-<label class="hf-base-input-label" *ngIf="label">Latitude</label>
+<label class="hf-base-input-label" *ngIf="label">{{ getRequiredLabel(label) }}</label>
+<label class="hf-base-input-label" *ngIf="labelLat">{{ labelLat }}</label>
 
 <input type="text"
        class="hf-base-input"
-       [class.invalid]="control && control.invalid"
+       [class.invalid]="control.invalid"
+       [class.touched]="control.touched"
+       [readOnly]="readonly"
        [disabled]="disabled"
        [ngModel]="internalLatValue"
        (ngModelChange)="latChange($event)"
@@ -14,11 +17,13 @@
        [dropSpecialCharacters]="internalLatMask.dropSpecialCharacters"
        prefix="{{internalLatMask.prefix}}" />
 
-<label class="hf-base-input-label" *ngIf="label">Longitude</label>
+<label class="hf-base-input-label" *ngIf="labelLon">{{ labelLon }}</label>
 
 <input type="text"
        class="hf-base-input"
-       [class.invalid]="control && control.invalid"
+       [class.invalid]="control.invalid"
+       [class.touched]="control.touched"
+       [readOnly]="readonly"
        [disabled]="disabled"
        [ngModel]="internalLonValue"
        (ngModelChange)="lonChange($event)"

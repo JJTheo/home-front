@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { HomeFrontValidators } from "src/app/home-front-validators";
 
 @Component({
   selector: "app-showcase",
@@ -16,9 +17,9 @@ export class ShowcaseComponent implements OnInit, AfterViewInit {
   constructor(private changeDetect: ChangeDetectorRef, private fb: FormBuilder) {
     let initialGeo = { lat: 43, lon: 6 };
     this.formGroup = this.fb.group({
-      number: [2.321321, [Validators.required, Validators.min(3), Validators.max(10)]],
-      text: ["4", [Validators.required, Validators.minLength(2)]],
-      geo: [initialGeo, Validators.required]
+      number: [5.321321, Validators.compose([Validators.required, Validators.min(3), Validators.max(10)])],
+      text: ["41", [Validators.required, Validators.minLength(2)]],
+      geo: [initialGeo, HomeFrontValidators.geoCoordRequired],
     });
 
     // Test 100 formControls
@@ -69,7 +70,7 @@ export class ShowcaseComponent implements OnInit, AfterViewInit {
     this.formGroup.setValue({
       number: randNum,
       text: "t" + randNum,
-      geo: { lat: randNum + 1, lon: randNum }
+      geo: { lat: randNum + 1, lon: randNum },
     });
   }
 }

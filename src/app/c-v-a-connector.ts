@@ -1,6 +1,15 @@
-import { AbstractControl, ControlContainer, ControlValueAccessor, FormControl, ValidatorFn } from '@angular/forms';
-import { Injector, Input, OnInit } from '@angular/core';
-import { ErrorMessageService } from './services/error-message.service';
+import {
+  AbstractControl,
+  ControlContainer,
+  ControlValueAccessor,
+  FormControl,
+  RequiredValidator,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
+import { Injector, Input, OnInit } from "@angular/core";
+import { ErrorMessageService } from "./services/error-message.service";
+import { RequiredValidatorChecker } from './required-validator-checker';
 
 export abstract class CVAConnector implements ControlValueAccessor, OnInit {
   // Form Control Validation
@@ -9,17 +18,19 @@ export abstract class CVAConnector implements ControlValueAccessor, OnInit {
 
   control: FormControl;
 
-  protected _onTouched = () => { };
-  protected _onChange = (value: any) => { };
+  protected _onTouched = () => {};
+  protected _onChange = (value: any) => {};
+
+  private requiredChecker : RequiredValidatorChecker;
 
   constructor(private injector: Injector, private errorService: ErrorMessageService) {
+    this.requiredChecker = new RequiredValidatorChecker();
   }
 
   ngOnInit(): void {
     if (this.formControl) {
       this.control = this.formControl;
-    }
-    else if (this.formControlName) {
+    } else if (this.formControlName) {
       let controlContainer: ControlContainer = this.injector.get(ControlContainer);
       if (controlContainer) {
         this.control = controlContainer.control.get(this.formControlName) as FormControl;
@@ -42,12 +53,14 @@ export abstract class CVAConnector implements ControlValueAccessor, OnInit {
     return this.control.touched ? this.errorService.getErrorMessage(this.control.errors) : undefined;
   }
 
-  getLabel(label: string): string {
-    return this.hasRequiredValidator(this.control) ? "* " + label : label;
+  getRequiredLabel(label: string): string {
+    return this.requiredChecker.hasRequiredValidator(this.control) ? "* " + label : label;
   }
 
   addValidator(validator: ValidatorFn) {
-    this.control.setValidators(this.control.validator ? [this.control.validator, validator] : validator);
+    this.control.setValidators(
+      this.control.validator ? Validators.compose([this.control.validator, validator]) : validator
+    );
   }
 
   /* CONTROL VALUE ACCESSOR IMPL */
@@ -62,15 +75,4 @@ export abstract class CVAConnector implements ControlValueAccessor, OnInit {
 
   abstract writeValue(val: any): void;
   abstract setDisabledState(isDisabled: boolean): void;
-
-  /* https://stackoverflow.com/a/47010307 */
-  private hasRequiredValidator(abstractControl: AbstractControl): boolean {
-    if (abstractControl.validator) {
-      const validator = abstractControl.validator({} as AbstractControl);
-      if (validator && validator.required) {
-        return true;
-      }
-    }
-    return false;
-  }
 }
